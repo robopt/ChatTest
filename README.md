@@ -1,4 +1,4 @@
-## lightsOn
+## ChatTest
 
 Simple java application to show the use of ServerSockets and Threads.
 
