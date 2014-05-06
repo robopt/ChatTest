@@ -12,9 +12,9 @@ Move Server.java to a box which will be the host. Compile `javac Server.java` an
 - (robopt): logout messages added
 - (robopt): change nickname added
 - (robopt): /quit command added
+- (robopt): added documentation
 
 
 ## Todo
 - Login broadcast message
 - Echo port on login incase they pick port 0
-- DOCUMENTATION

@@ -11,7 +11,6 @@ import java.util.*;
  * @author: Edward Mead (robopt)
  */
 public class Server {
-    private JTextArea jta = new JTextArea();
 
     public static void main(String[] args) {
         if (args.length != 1)

@@ -1,10 +1,3 @@
-/*
- * Client.java
- *
- * $Id$
- *
- * $Log$
- */
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -13,14 +6,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /*
- * Client program sends radii to the server and then receives
- * the resulting area back.
+ * Client program sends and recieves messages to the chat server.
  *
  * @author: Liang: Ex. 28.2
  * @author: Sean Strout
+ * @author: Edward Mead (robopt)
  */
 public class Client extends JFrame implements ActionListener {
-    private JTextField jtf, name;
+    private JTextField jtf;
     private JTextArea jta = new JTextArea();
     private JButton jbtStart, jbtStop;
 
@@ -30,19 +23,25 @@ public class Client extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.out.println("Usage: java Client hostname port");
+            System.out.println("Usage: Client hostname port\nExample: java Client localhost 8080");
             System.exit(-1);
         }
         new Client(args[0], args[1]);
     }
 
+    /**
+     * Client Constructor.
+     * Create a client which connects to a host on a certain port.
+     * TODO Argument validation.
+     * @param host Host/IP of the server
+     * @param port Port to bind/connect to
+     */
     public Client(String host, String port) {
         JPanel p1 = new JPanel();
         p1.setLayout(new BorderLayout());
 
         p1.add(new Label("Enter message"), BorderLayout.WEST);
         p1.add(jtf = new JTextField(10), BorderLayout.CENTER);
-        //p1.add(name = new JTextField(10), BorderLayout.NORTH);
         jtf.setHorizontalAlignment(JTextField.RIGHT);
 
         getContentPane().setLayout(new BorderLayout());
@@ -61,46 +60,45 @@ public class Client extends JFrame implements ActionListener {
             // Create a socket to connect to the server
             Socket socket = new Socket(host, Integer.parseInt(port));
             
-            // Create an input stream to receive data from the server
-            //input = new DataInputStream(
-              //      socket.getInputStream());
+            // Create an input thread to listen on.
             ClientThread t = new ClientThread(socket,jta);
             t.start();
+
             // Create an output stream to send data to the server
             output = new DataOutputStream(
                     socket.getOutputStream());
-            //output.writeUTF("\\nick <nameless>");
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             jta.append(ex.toString()+'\n');
         }
-    }
+    } /* Client Constructor */
 
+    /**
+     * Keyboard event!
+     * @param e The action event that happened.
+     */
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
         if (e.getSource() == jtf) {
             try {
-                // Read the radius from the text field
-                //double radius = Double.parseDouble(jtf.getText().trim());
-                //jta.append("Radius is " + radius + "\n");
+                
+                // /quit -> quit
                 if (jtf.getText().startsWith("/quit"))
                     System.exit(0);
-                // Send radius to the server
+                
+                // send to server
                 output.writeUTF(jtf.getText());
                 output.flush();
                 jtf.setText("");
-                // Get area from the server
-                //double area = input.readDouble();
-
-                // Print area on
-                //jta.append("Area received from the server is "
-                        //+ area + "\n");
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 System.err.println(ex);
             }
         } 
-    }
+    } /* actionPerformed */
+
+    /**
+     * Client Thread.
+     * Handles the recieving of characters.
+     */
     class ClientThread extends Thread {
         private Socket socket;
         private JTextArea jta;
@@ -110,28 +108,31 @@ public class Client extends JFrame implements ActionListener {
             this.jta = jta;
         }
 
+        /**
+         * Run. Waits for messages then displays them.
+         */
         public void run() {
 
             try {
+                //input stream
                 DataInputStream input = new DataInputStream(socket.getInputStream());
-                //DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                //network.addOutput(id,out);
-
+                //wait forever for messages
                 while (true) {
                     String data = input.readUTF();
-                    System.out.println(data);
+                    /*System.out.println(data); //debug */
+
+                    //if server is confirming our username
                     if (data.startsWith("$name "))
                        setTitle("<"+data.substring(6)+">: " + InetAddress.getLocalHost().getHostName());
                     else
                         jta.append(data+"\n");
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println(e);
             }
-        }
+        } /* run */
 
-    }
+    } /* ClientThread */
 
 }
