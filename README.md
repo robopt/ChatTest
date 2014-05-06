@@ -17,3 +17,4 @@ Move Server.java to a box which will be the host. Compile `javac Server.java` an
 ## Todo
 - Login broadcast message
 - Echo port on login incase they pick port 0
+- DOCUMENTATION
