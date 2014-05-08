@@ -42,7 +42,7 @@ public class Client extends JFrame implements ActionListener {
 
         p1.add(new Label("Enter message"), BorderLayout.WEST);
         p1.add(jtf = new JTextField(10), BorderLayout.CENTER);
-        jtf.setHorizontalAlignment(JTextField.RIGHT);
+        jtf.setHorizontalAlignment(JTextField.LEFT);
 
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(p1, BorderLayout.NORTH);
@@ -62,11 +62,11 @@ public class Client extends JFrame implements ActionListener {
             
             // Create an input thread to listen on.
             ClientThread t = new ClientThread(socket,jta);
-            t.start();
 
             // Create an output stream to send data to the server
             output = new DataOutputStream(
                     socket.getOutputStream());
+            t.start();
         } catch (IOException ex) {
             jta.append(ex.toString()+'\n');
         }
@@ -82,7 +82,8 @@ public class Client extends JFrame implements ActionListener {
             try {
                 
                 // /quit -> quit
-                if (jtf.getText().startsWith("/quit"))
+                if (jtf.getText().startsWith("/quit") || 
+                        jtf.getText().startsWith("/exit"))
                     System.exit(0);
                 
                 // send to server

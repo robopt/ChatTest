@@ -7,6 +7,10 @@ Move Server.java to a box which will be the host. Compile `javac Server.java` an
 
 ## Changelog
 
+#### May 7, 2014
+- (robopt): added login broadcast message
+- (robopt): echoes port on launch
+
 #### May 5, 2014
 - (robopt): initial commit
 - (robopt): logout messages added
@@ -14,7 +18,5 @@ Move Server.java to a box which will be the host. Compile `javac Server.java` an
 - (robopt): /quit command added
 - (robopt): added documentation
 
-
 ## Todo
-- Login broadcast message
-- Echo port on login incase they pick port 0
+

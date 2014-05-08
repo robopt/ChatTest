@@ -30,6 +30,7 @@ public class Server {
             // Create a server socket
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server started at " + new Date() + '\n');
+            System.out.println("Port: " + serverSocket.getLocalPort());
 
             ClientNetwork network = new ClientNetwork();
             while (true) {
@@ -196,6 +197,7 @@ public class Server {
             this.network = n;
             this.socket = s;
             this.id = id;
+            this.network.send("Server", id + " has connected.");
         }
 
         /**
